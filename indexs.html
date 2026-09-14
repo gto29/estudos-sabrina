@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Painel Gamificado de Estudos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        app: {
+                            bg: '#0b1329',
+                            card: '#111c44',
+                            cardHover: '#1b2a5a',
+                            border: '#23356f'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b1329;
+            color: #f1f5f9;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass-card {
+            background: linear-gradient(135deg, rgba(17, 28, 68, 0.85) 0%, rgba(15, 23, 42, 0.75) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+        .pulse-badge {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .75; transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-12 selection:bg-purple-500 selection:text-white">
+
+    <!-- CABEÇALHO -->
+    <header class="bg-app-card/80 backdrop-blur-md border-b border-app-border sticky top-0 z-30">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            
+            <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-gradient-to-tr from-violet-600 via-indigo-500 to-cyan-400 flex items-center justify-center font-bold text-lg md:text-xl shadow-lg shadow-indigo-500/20">
+                        🎓
+                    </div>
+                    <div>
+                        <h1 class="text-lg md:text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 leading-tight">Bem vinda Sabrina</h1>
+                        <p class="text-[11px] md:text-xs text-slate-400 flex items-center gap-2">
+                            <span>Meta: 6 Dias</span>
+                            <span class="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                            <span id="hoje-data" class="text-cyan-400 font-semibold uppercase tracking-wider text-[10px] md:text-[11px]">--</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 w-full md:w-auto justify-end flex-wrap">
+                <button onclick="abrirLoja()" class="flex-1 md:flex-none px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 to-yellow-500/20 hover:from-amber-500/30 hover:to-yellow-500/30 text-amber-300 text-xs font-semibold flex items-center justify-center gap-1.5 border border-amber-500/30 transition shadow-sm">
+                    <span>🛍️Loja de recompensas</span>
+                </button>
+
+                <button onclick="abrirHistorico()" class="px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center justify-center gap-2 border border-slate-700/80 transition shadow-sm">
+                    <span>⚠️ Penalidades</span>
+                    <span id="badge-penalidades" class="bg-rose-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold shadow-sm shadow-rose-500/40">0</span>
+                </button>
+
+                <button onclick="resetarTudo()" class="px-3 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs font-semibold border border-rose-500/30 transition">
+                    Restaurar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 pt-6 md:pt-8">
+
+        <!-- PAINEL DE MÉTRICAS -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
+            
+            <!-- XP -->
+            <div class="glass-card rounded-2xl p-4 md:p-5 group hover:border-violet-500/40 transition-all">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-violet-300/80">Nível & XP</span>
+                    <span id="user-level" class="text-[10px] md:text-xs font-extrabold px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/40 shadow-sm">Lvl 1</span>
+                </div>
+                <div class="flex items-baseline gap-1.5 mb-2">
+                    <span id="user-xp" class="text-2xl md:text-3xl font-black text-white tracking-tight">0</span>
+                    <span class="text-[10px] md:text-xs text-violet-300/60 font-medium">XP Total</span>
+                </div>
+                <div class="w-full bg-slate-900/80 h-2 rounded-full overflow-hidden p-0.5 border border-slate-700/50">
+                    <div id="bar-xp" class="bg-gradient-to-r from-violet-600 to-indigo-400 h-full rounded-full w-0 transition-all duration-500"></div>
+                </div>
+                <div id="user-title" class="text-[10px] md:text-[11px] text-indigo-300 font-semibold mt-2 truncate">Iniciante</div>
+            </div>
+
+            <!-- OURO -->
+            <div class="glass-card rounded-2xl p-4 md:p-5 group hover:border-amber-500/40 transition-all">
+                <span class="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-amber-300/80 block mb-2">Carteira de Ouro</span>
+                <div class="flex items-baseline gap-1.5 mb-2">
+                    <span id="user-gold" class="text-2xl md:text-3xl font-black text-amber-400 tracking-tight">0</span>
+                    <span class="text-[10px] md:text-xs text-amber-300/60 font-medium">Moedas 🪙</span>
+                </div>
+                <button onclick="abrirLoja()" class="w-full mt-2 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg text-[11px] font-bold transition">
+                    Ver Loja de Motivações
+                </button>
+            </div>
+
+            <!-- HORAS -->
+            <div class="glass-card rounded-2xl p-4 md:p-5 group hover:border-cyan-500/40 transition-all">
+                <span class="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-cyan-300/80 block mb-2">Horas / Semana</span>
+                <div class="flex items-baseline gap-1.5 mb-2">
+                    <span id="total-horas" class="text-2xl md:text-3xl font-black text-cyan-400 tracking-tight">0h</span>
+                    <span class="text-[10px] md:text-xs text-slate-400">/ 24h</span>
+                </div>
+                <div class="w-full bg-slate-900/80 h-2 rounded-full overflow-hidden p-0.5 border border-slate-700/50">
+                    <div id="bar-horas" class="bg-gradient-to-r from-cyan-500 to-teal-400 h-full rounded-full w-0 transition-all duration-500"></div>
+                </div>
+                <span id="text-dias" class="text-[10px] md:text-[11px] text-slate-400 font-medium mt-2 block truncate">0h de 24h concluidas</span>
+            </div>
+
+            <!-- REGRAS -->
+            <div class="glass-card rounded-2xl p-4 md:p-5 group hover:border-emerald-500/40 transition-all">
+                <span class="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-slate-300 block mb-2">Recompensas / Etapa</span>
+                <div class="space-y-1 text-[11px]">
+                    <div class="flex justify-between text-emerald-400 font-semibold">
+                        <span>Teoria (19-22h):</span>
+                        <span class="bg-emerald-500/10 px-1 rounded border border-emerald-500/20">+50 XP | +50 🪙</span>
+                    </div>
+                    <div class="flex justify-between text-emerald-400 font-semibold">
+                        <span>Prática (22-23h):</span>
+                        <span class="bg-emerald-500/10 px-1 rounded border border-emerald-500/20">+50 XP | +50 🪙</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TABELA PRINCIPAL -->
+        <div class="glass-card rounded-2xl overflow-hidden shadow-2xl mb-12 border border-app-border">
+            <div class="p-4 border-b border-app-border bg-slate-900/60 flex justify-between items-center">
+                <h2 class="font-bold text-slate-200 text-xs md:text-sm flex items-center gap-2">
+                    <span>📅 Cronograma Semanal</span>
+                </h2>
+                <span class="text-[10px] md:text-xs text-slate-400 font-medium">Deslize para o lado se necessário ➔</span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[700px]">
+                    <thead>
+                        <tr class="border-b border-app-border text-[11px] font-bold uppercase text-slate-400 bg-slate-900/40">
+                            <th class="py-4 px-4 w-[16%]">Dia</th>
+                            <th class="py-4 px-4 w-[24%] text-center">Etapa 1: Teoria (19h-22h)</th>
+                            <th class="py-4 px-4 w-[24%] text-center">Etapa 2: Prática (22h-23h)</th>
+                            <th class="py-4 px-4 w-[20%]">Matéria / Conteúdo</th>
+                            <th class="py-4 px-4 w-[8%] text-center">Folga?</th>
+                            <th class="py-4 px-4 w-[8%] text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-corpo" class="divide-y divide-app-border text-xs md:text-sm">
+                        <!-- Gerado via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL LOJA DE VALE PRESENTES -->
+    <div id="modal-loja" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="glass-card w-full max-w-2xl rounded-2xl p-6 shadow-2xl relative border border-slate-700 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-app-border">
+                <div>
+                    <h3 class="font-bold text-lg text-amber-400 flex items-center gap-2">
+                        <span>🛍️ Loja da Motivação do guto</span>
+                    </h3>
+                    <p class="text-xs text-slate-400">Aqui está uma pequena motivação feita por mim para você amor, continue estudando que você será recompensada.</p>
+                </div>
+                <button onclick="fecharLoja()" class="text-slate-400 hover:text-white font-bold text-xl">&times;</button>
+            </div>
+
+            <!-- Resumo da Carteira na Loja -->
+            <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 mb-6 flex justify-between items-center">
+                <span class="text-xs font-semibold text-amber-200">Seu Saldo Atual:</span>
+                <div class="flex items-center gap-1">
+                    <span id="loja-gold-saldo" class="text-lg font-black text-amber-400">0</span>
+                    <span class="text-xs">🪙 Ouro</span>
+                </div>
+            </div>
+
+            <!-- Opções de Cupons -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <!-- Voucher R$ 50 -->
+                <div class="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 flex flex-col justify-between items-center text-center">
+                    <div class="text-2xl mb-1">🎁</div>
+                    <div class="font-black text-lg text-white">R$ 50,00</div>
+                    <div class="text-[11px] text-slate-400 mb-3">Vale Shopping PRO MEU AMOR</div>
+                    <div class="bg-amber-500/20 text-amber-300 font-extrabold text-xs px-2.5 py-1 rounded-full mb-3 border border-amber-500/30">
+                        1.500 🪙 Ouros
+                    </div>
+                    <button onclick="resgatarCupom(50, 1000)" class="w-full py-2 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-slate-950 font-extrabold text-xs rounded-xl shadow-md transition">
+                        Resgatar
+                    </button>
+                </div>
+
+                <!-- Voucher R$ 100 -->
+                <div class="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 flex flex-col justify-between items-center text-center relative overflow-hidden">
+                    <div class="bg-violet-600 text-white text-[9px] font-black uppercase px-6 py-0.5 absolute -right-6 top-3 rotate-45 shadow">Bônus</div>
+                    <div class="text-2xl mb-1">💳</div>
+                    <div class="font-black text-lg text-white">R$ 100,00</div>
+                    <div class="text-[11px] text-slate-400 mb-3">Vale Shopping PRO MEU AMOR</div>
+                    <div class="bg-amber-500/20 text-amber-300 font-extrabold text-xs px-2.5 py-1 rounded-full mb-3 border border-amber-500/30">
+                        2.300 🪙 Ouros
+                    </div>
+                    <button onclick="resgatarCupom(100, 1800)" class="w-full py-2 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-slate-950 font-extrabold text-xs rounded-xl shadow-md transition">
+                        Resgatar
+                    </button>
+                </div>
+
+                <!-- Voucher R$ 200 -->
+                <div class="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 flex flex-col justify-between items-center text-center relative overflow-hidden">
+                    <div class="bg-emerald-500 text-slate-950 text-[9px] font-black uppercase px-6 py-0.5 absolute -right-6 top-3 rotate-45 shadow">Melhor Oferta</div>
+                    <div class="text-2xl mb-1">👑</div>
+                    <div class="font-black text-lg text-white">R$ 200,00</div>
+                    <div class="text-[11px] text-slate-400 mb-3">Vale Shopping PRO MEU AMOR</div>
+                    <div class="bg-amber-500/20 text-amber-300 font-extrabold text-xs px-2.5 py-1 rounded-full mb-3 border border-amber-500/30">
+                        3.700 🪙 Ouros
+                    </div>
+                    <button onclick="resgatarCupom(200, 3200)" class="w-full py-2 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-slate-950 font-extrabold text-xs rounded-xl shadow-md transition">
+                        Resgatar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Meus Resgates -->
+            <div class="pt-4 border-t border-app-border">
+                <h4 class="font-bold text-xs uppercase tracking-wider text-slate-400 mb-3">🎟️ Meus Cupons Resgatados</h4>
+                <div id="container-cupons" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                    <!-- Gerado via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PENALIDADE -->
+    <div id="modal-mensagem-penalidade" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
+        <div class="glass-card w-full max-w-md rounded-3xl p-6 shadow-2xl border border-rose-500/40 text-center relative overflow-hidden">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-rose-500 to-pink-500 text-white flex items-center justify-center text-3xl mx-auto mb-4 shadow-lg shadow-rose-500/30">
+                💔
+            </div>
+            <h3 class="text-lg font-bold text-white mb-1">Você teve uma penalidade!</h3>
+            <div class="bg-rose-950/40 border border-rose-500/30 rounded-2xl p-5 my-4 shadow-inner">
+                <p class="text-sm italic text-rose-200 font-semibold leading-relaxed">
+                    "Meu amor , não deixe de estudar. Consolide suas ideias para se tornar realidade"
+                </p>
+            </div>
+            <button onclick="fecharMensagemPenalidade()" class="w-full py-3.5 bg-gradient-to-r from-rose-500 via-pink-600 to-violet-600 hover:from-rose-600 hover:to-violet-700 text-white rounded-xl text-xs font-extrabold tracking-wide uppercase shadow-lg shadow-rose-500/25 transition transform active:scale-95">
+                Entendido, vou focar! ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL HISTÓRICO -->
+    <div id="modal-historico" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="glass-card w-full max-w-lg rounded-2xl p-6 shadow-2xl relative border border-slate-700">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-app-border">
+                <h3 class="font-bold text-base md:text-lg text-rose-400 flex items-center gap-2">
+                    <span>⚠️ Histórico de Penalidades</span>
+                </h3>
+                <button onclick="fecharHistorico()" class="text-slate-400 hover:text-white font-bold text-xl">&times;</button>
+            </div>
+            <div id="conteudo-historico" class="space-y-3 max-h-80 overflow-y-auto pr-2"></div>
+            <div class="mt-6 flex justify-between items-center pt-3 border-t border-app-border">
+                <button onclick="limparHistorico()" class="text-xs text-slate-400 hover:text-rose-400 transition font-medium">Limpar Histórico</button>
+                <button onclick="fecharHistorico()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold border border-slate-700">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const dadosPadrao = [
+            { diaIndex: 1, dia: "Segunda-feira", materia: "Matemática", folga: false, teoriaConcluida: false, praticaConcluida: false, expirado: false },
+            { diaIndex: 2, dia: "Terça-feira", materia: "Português", folga: false, teoriaConcluida: false, praticaConcluida: false, expirado: false },
+            { diaIndex: 3, dia: "Quarta-feira", materia: "História", folga: false, teoriaConcluida: false, praticaConcluida: false, expirado: false },
+            { diaIndex: 4, dia: "Quinta-feira", materia: "Geografia", folga: false, teoriaConcluida: false, praticaConcluida: false, expirado: false },
+            { diaIndex: 5, dia: "Sexta-feira", materia: "Física / Química", folga: false, teoriaConcluida: false, praticaConcluida: false, expirado: false },
+            { diaIndex: 6, dia: "Sábado", materia: "Biologia", folga: false, teoriaConcluida: false, praticaConcluida: false, expirado: false },
+            { diaIndex: 0, dia: "Domingo", materia: "-", folga: true, teoriaConcluida: false, praticaConcluida: false, expirado: false }
+        ];
+
+        function carregarLocalStorage(chave, padrao) {
+            try {
+                const item = localStorage.getItem(chave);
+                return item ? JSON.parse(item) : padrao;
+            } catch (e) {
+                return padrao;
+            }
+        }
+
+        let dados = carregarLocalStorage('estudos_gamificados_dados_v2', dadosPadrao);
+        let penalidades = carregarLocalStorage('estudos_gamificados_penalidades', []);
+        let xpAcumuladoTotal = carregarLocalStorage('estudos_gamificados_xp_total', 0);
+        let goldAcumuladoTotal = carregarLocalStorage('estudos_gamificados_gold_total', 0);
+        let cuponsResgatados = carregarLocalStorage('estudos_gamificados_cupons', []);
+        let ultimaSemanaAno = localStorage.getItem('estudos_gamificados_ultima_semana') || '';
+
+        const agora = new Date();
+        const diaSemanaAtual = agora.getDay();
+
+        function getSemanaAtual(d) {
+            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+            var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+            return `${d.getUTCFullYear()}-W${weekNo}`;
+        }
+
+        function checarResetSemanal() {
+            const semanaAtual = getSemanaAtual(agora);
+            if (ultimaSemanaAno && ultimaSemanaAno !== semanaAtual) {
+                dados.forEach(item => {
+                    item.teoriaConcluida = false;
+                    item.praticaConcluida = false;
+                    item.expirado = false;
+                });
+                localStorage.setItem('estudos_gamificados_ultima_semana', semanaAtual);
+                salvarDados();
+            } else if (!ultimaSemanaAno) {
+                localStorage.setItem('estudos_gamificados_ultima_semana', semanaAtual);
+            }
+        }
+
+        function checarPenalidadesAutomaticas() {
+            let mudanca = false;
+            let teveNovaPenalidade = false;
+            
+            dados.forEach(item => {
+                if (!item.folga && (!item.teoriaConcluida || !item.praticaConcluida) && !item.expirado) {
+                    let diaItem = item.diaIndex;
+                    let diaItemNormalizado = diaItem === 0 ? 7 : diaItem;
+                    let diaAtualNormalizado = diaSemanaAtual === 0 ? 7 : diaSemanaAtual;
+
+                    if (diaItemNormalizado < diaAtualNormalizado) {
+                        item.expirado = true;
+                        xpAcumuladoTotal = Math.max(0, xpAcumuladoTotal - 50);
+                        goldAcumuladoTotal = Math.max(0, goldAcumuladoTotal - 50);
+                        mudanca = true;
+                        teveNovaPenalidade = true;
+                        
+                        penalidades.unshift({
+                            dia: item.dia,
+                            xpPerdido: 50,
+                            data: new Date().toLocaleDateString('pt-BR') + ' às 23:59:59',
+                            motivo: 'Incompleto ou pendente no prazo'
+                        });
+                    }
+                }
+            });
+
+            if (mudanca) salvarDados();
+
+            if (teveNovaPenalidade || dados.some(d => d.expirado)) {
+                setTimeout(() => {
+                    const modal = document.getElementById('modal-mensagem-penalidade');
+                    if (modal) modal.classList.remove('hidden');
+                }, 400);
+            }
+        }
+
+        function fecharMensagemPenalidade() {
+            const modal = document.getElementById('modal-mensagem-penalidade');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function renderizarTabela() {
+            const tbody = document.getElementById('tabela-corpo');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+            let totalHorasSemana = 0;
+
+            dados.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                const eHoje = row.diaIndex === diaSemanaAtual;
+
+                if (!row.folga) {
+                    if (row.teoriaConcluida) totalHorasSemana += 3;
+                    if (row.praticaConcluida) totalHorasSemana += 1;
+                }
+
+                if (row.folga) {
+                    tr.className = "bg-emerald-950/20 text-emerald-300/80";
+                } else if (row.expirado) {
+                    tr.className = "bg-rose-950/30 text-rose-200 border-l-4 border-l-rose-500";
+                } else if (eHoje) {
+                    tr.className = "bg-cyan-950/40 border-l-4 border-l-cyan-400 font-medium";
+                } else {
+                    tr.className = "hover:bg-slate-800/50 transition";
+                }
+
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-semibold">
+                        <div class="flex items-center gap-1.5">
+                            <span>${row.dia}</span>
+                            ${eHoje ? `<span class="px-1.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-[9px] font-bold border border-cyan-500/40 pulse-badge">HOJE</span>` : ''}
+                        </div>
+                    </td>
+
+                    <td class="py-2.5 px-3 text-center">
+                        ${row.folga ? '<span class="text-xs text-slate-500">-</span>' : `
+                            <button onclick="alternarEtapa(${index}, 'teoria')" 
+                                class="w-full py-2 px-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 ${row.teoriaConcluida ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20' : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700'}">
+                                ${row.teoriaConcluida ? '✓ Teoria | +50XP +50🪙' : '📘 Teoria (19h-22h)'}
+                            </button>
+                        `}
+                    </td>
+
+                    <td class="py-2.5 px-3 text-center">
+                        ${row.folga ? '<span class="text-xs text-slate-500">-</span>' : `
+                            <button onclick="alternarEtapa(${index}, 'pratica')" 
+                                class="w-full py-2 px-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 ${row.praticaConcluida ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20' : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700'}">
+                                ${row.praticaConcluida ? '✓ Prática | +50XP +50🪙' : '✏️ Prática (22h-23h)'}
+                            </button>
+                        `}
+                    </td>
+
+                    <td class="py-3 px-4">
+                        <input type="text" value="${row.materia}" 
+                            onchange="atualizarMateria(${index}, this.value)" 
+                            class="w-full bg-slate-900/90 border border-slate-700/70 rounded-lg px-2 py-1 text-xs text-slate-200 focus:outline-none focus:border-violet-500 transition ${row.folga ? 'opacity-40 cursor-not-allowed' : ''}" 
+                            ${row.folga ? 'disabled' : ''}>
+                    </td>
+
+                    <td class="py-3 px-4 text-center">
+                        <input type="checkbox" ${row.folga ? 'checked' : ''} 
+                            onchange="alternarFolga(${index})" 
+                            class="w-4 h-4 rounded border-slate-700 bg-slate-900 text-emerald-500 focus:ring-0 cursor-pointer">
+                    </td>
+
+                    <td class="py-3 px-4 text-center">
+                        ${row.folga 
+                            ? `<span class="px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-bold block">FOLGA</span>` 
+                            : row.expirado 
+                            ? `<span class="px-2 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-bold block cursor-pointer hover:bg-rose-500/30 transition shadow-sm" onclick="relevarPenalidade(${index})" title="Clique para refazer com tolerância">Expirado ⚠️</span>`
+                            : `<span class="text-xs font-bold ${row.teoriaConcluida && row.praticaConcluida ? 'text-emerald-400' : (row.teoriaConcluida || row.praticaConcluida) ? 'text-amber-400' : 'text-slate-500'}">
+                                ${row.teoriaConcluida && row.praticaConcluida ? '100%' : (row.teoriaConcluida || row.praticaConcluida) ? '50%' : '0%'}
+                              </span>`
+                        }
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('total-horas').innerText = `${totalHorasSemana}h`;
+            document.getElementById('bar-horas').style.width = `${(totalHorasSemana / 24) * 100}%`;
+            document.getElementById('text-dias').innerText = `${totalHorasSemana}h de 24h concluidas`;
+
+            document.getElementById('user-xp').innerText = xpAcumuladoTotal;
+            document.getElementById('user-gold').innerText = goldAcumuladoTotal;
+            
+            let level = Math.floor(xpAcumuladoTotal / 300) + 1;
+            let titulo = "Iniciante dos Estudos";
+            if (level >= 5) { titulo = "Mestre Supremo dos Concursos 🏆"; }
+            else if (level >= 3) { titulo = "Lenda do Cursinho 👑"; }
+            else if (level >= 2) { titulo = "Estudante Focado 🔥"; }
+
+            let progressoProximoNivel = (xpAcumuladoTotal % 300) / 300 * 100;
+            document.getElementById('bar-xp').style.width = `${progressoProximoNivel}%`;
+            document.getElementById('user-level').innerText = `Lvl ${level}`;
+            document.getElementById('user-title').innerText = titulo;
+
+            document.getElementById('badge-penalidades').innerText = penalidades.length;
+
+            salvarDados();
+        }
+
+        function alternarEtapa(index, tipo) {
+            if (tipo === 'teoria') {
+                dados[index].teoriaConcluida = !dados[index].teoriaConcluida;
+                xpAcumuladoTotal += dados[index].teoriaConcluida ? 50 : -50;
+                goldAcumuladoTotal += dados[index].teoriaConcluida ? 50 : -50;
+            } else if (tipo === 'pratica') {
+                dados[index].praticaConcluida = !dados[index].praticaConcluida;
+                xpAcumuladoTotal += dados[index].praticaConcluida ? 50 : -50;
+                goldAcumuladoTotal += dados[index].praticaConcluida ? 50 : -50;
+            }
+
+            xpAcumuladoTotal = Math.max(0, xpAcumuladoTotal);
+            goldAcumuladoTotal = Math.max(0, goldAcumuladoTotal);
+            dados[index].expirado = false;
+            renderizarTabela();
+        }
+
+        function alternarFolga(index) {
+            if (dados[index].teoriaConcluida) {
+                xpAcumuladoTotal = Math.max(0, xpAcumuladoTotal - 50);
+                goldAcumuladoTotal = Math.max(0, goldAcumuladoTotal - 50);
+            }
+            if (dados[index].praticaConcluida) {
+                xpAcumuladoTotal = Math.max(0, xpAcumuladoTotal - 50);
+                goldAcumuladoTotal = Math.max(0, goldAcumuladoTotal - 50);
+            }
+            
+            dados[index].folga = !dados[index].folga;
+            dados[index].teoriaConcluida = false;
+            dados[index].praticaConcluida = false;
+            dados[index].expirado = false;
+            renderizarTabela();
+        }
+
+        function atualizarMateria(index, valor) {
+            dados[index].materia = valor;
+            salvarDados();
+        }
+
+        function relevarPenalidade(index) {
+            if (confirm("Deseja concluir o dia completo e recuperar seu XP e Ouro?")) {
+                dados[index].expirado = false;
+                dados[index].teoriaConcluida = true;
+                dados[index].praticaConcluida = true;
+                xpAcumuladoTotal += 100;
+                goldAcumuladoTotal += 100;
+                renderizarTabela();
+            }
+        }
+
+        function salvarDados() {
+            try {
+                localStorage.setItem('estudos_gamificados_dados_v2', JSON.stringify(dados));
+                localStorage.setItem('estudos_gamificados_penalidades', JSON.stringify(penalidades));
+                localStorage.setItem('estudos_gamificados_xp_total', JSON.stringify(xpAcumuladoTotal));
+                localStorage.setItem('estudos_gamificados_gold_total', JSON.stringify(goldAcumuladoTotal));
+                localStorage.setItem('estudos_gamificados_cupons', JSON.stringify(cuponsResgatados));
+            } catch (e) {
+                console.warn('Servidor/Navegador bloqueou escrita no LocalStorage:', e);
+            }
+        }
+
+        function resetarTudo() {
+            if (confirm("Deseja apagar TODO o seu progresso, XP, Ouro e cupons?")) {
+                try {
+                    localStorage.clear();
+                } catch (e) {}
+                dados = JSON.parse(JSON.stringify(dadosPadrao));
+                penalidades = [];
+                cuponsResgatados = [];
+                xpAcumuladoTotal = 0;
+                goldAcumuladoTotal = 0;
+                renderizarTabela();
+            }
+        }
+
+        /* --- LÓGICA DA LOJA E CUPONS --- */
+        function abrirLoja() {
+            document.getElementById('loja-gold-saldo').innerText = goldAcumuladoTotal;
+            renderizarCupons();
+            const modal = document.getElementById('modal-loja');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function fecharLoja() {
+            const modal = document.getElementById('modal-loja');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function resgatarCupom(valorReais, custoOuro) {
+            if (goldAcumuladoTotal < custoOuro) {
+                alert(`Ouro insuficiente! Você precisa de ${custoOuro} ouros para resgatar este vale de R$ ${valorReais},00.`);
+                return;
+            }
+
+            if (confirm(`Confirmar o resgate do Vale-Presente de R$ ${valorReais},00 por ${custoOuro} Moedas de Ouro?`)) {
+                goldAcumuladoTotal -= custoOuro;
+                
+                const codigoCupom = 'SABRINA-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+                cuponsResgatados.unshift({
+                    valor: valorReais,
+                    codigo: codigoCupom,
+                    data: new Date().toLocaleDateString('pt-BR')
+                });
+
+                salvarDados();
+                renderizarTabela();
+                abrirLoja();
+            }
+        }
+
+        function renderizarCupons() {
+            const container = document.getElementById('container-cupons');
+            if (!container) return;
+
+            container.innerHTML = '';
+            if (cuponsResgatados.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 italic text-center py-2">Nenhum cupom resgatado ainda.</p>`;
+                return;
+            }
+
+            cuponsResgatados.forEach(c => {
+                const item = document.createElement('div');
+                item.className = "bg-slate-900 border border-emerald-500/30 p-2.5 rounded-xl flex justify-between items-center text-xs";
+                item.innerHTML = `
+                    <div>
+                        <div class="font-bold text-emerald-400">Vale Presente - R$ ${c.valor},00</div>
+                        <div class="text-[10px] text-slate-400">Resgatado em ${c.data}</div>
+                    </div>
+                    <span class="font-mono font-black text-amber-300 bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20 select-all">
+                        ${c.codigo}
+                    </span>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        /* --- LÓGICA DO HISTÓRICO --- */
+        function abrirHistorico() {
+            const container = document.getElementById('conteudo-historico');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            if (penalidades.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">Nenhuma penalidade registrada. Parabéns!</p>`;
+            } else {
+                penalidades.forEach(p => {
+                    const item = document.createElement('div');
+                    item.className = "bg-slate-900/90 p-3 rounded-xl border border-rose-500/20 flex justify-between items-center text-xs";
+                    item.innerHTML = `
+                        <div>
+                            <div class="font-bold text-slate-200">${p.dia}</div>
+                            <div class="text-[10px] text-slate-400">${p.data} - ${p.motivo}</div>
+                        </div>
+                        <span class="font-extrabold text-rose-300 bg-rose-500/10 px-2 py-1 rounded-lg border border-rose-500/20">-${p.xpPerdido} XP / Ouro</span>
+                    `;
+                    container.appendChild(item);
+                });
+            }
+
+            const modal = document.getElementById('modal-historico');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function fecharHistorico() {
+            const modal = document.getElementById('modal-historico');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function limparHistorico() {
+            penalidades = [];
+            salvarDados();
+            abrirHistorico();
+            document.getElementById('badge-penalidades').innerText = '0';
+        }
+
+        function iniciarContador() {
+            const elHoje = document.getElementById('hoje-data');
+            if (elHoje) {
+                elHoje.innerText = agora.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' });
+            }
+
+            function atualizarTimer() {
+                const now = new Date();
+                const sabado = new Date(now);
+                sabado.setDate(now.getDate() + (6 - now.getDay()));
+                sabado.setHours(23, 59, 59, 999);
+
+                const diff = sabado - now;
+                const elTimer = document.getElementById('countdown-timer');
+
+                if (elTimer) {
+                    if (diff > 0) {
+                        const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
+                        const horas = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                        const minutos = Math.floor((diff / 1000 / 60) % 60);
+                        elTimer.innerText = `${dias}d ${horas.toString().padStart(2, '0')}h ${minutos.toString().padStart(2, '0')}m`;
+                    } else {
+                        elTimer.innerText = "Semana Concluída";
+                    }
+                }
+            }
+
+            atualizarTimer();
+            setInterval(atualizarTimer, 60000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checarResetSemanal();
+            checarPenalidadesAutomaticas();
+            renderizarTabela();
+            iniciarContador();
+        });
+    </script>
+</body>
+</html>
