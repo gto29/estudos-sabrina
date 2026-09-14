@@ -414,10 +414,10 @@
                         if (row.praticaConcluida) totalHorasSemana += 1;
                     }
 
-                    let cardBg = "bg-slate-900/40 border-white/5";
+                    let cardBg = "bg-slate-900/40 border-white/5 opacity-70";
                     if (row.folga) cardBg = "bg-emerald-950/20 border-emerald-500/20";
                     else if (row.expirado) cardBg = "bg-rose-950/30 border-rose-500/30";
-                    else if (eHoje) cardBg = "bg-indigo-950/40 border-indigo-500/40 shadow-lg shadow-indigo-500/5";
+                    else if (eHoje) cardBg = "bg-indigo-950/40 border-indigo-500/40 shadow-lg shadow-indigo-500/5 opacity-100";
 
                     const card = document.createElement('div');
                     card.className = `p-3 rounded-2xl border ${cardBg} flex flex-col gap-2.5 transition`;
@@ -441,10 +441,10 @@
 
                         ${!row.folga ? `
                             <div class="grid grid-cols-2 gap-2 pt-0.5">
-                                <button onclick="alternarEtapa(${index}, 'teoria')" class="py-2 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center text-center ${row.teoriaConcluida ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20' : 'bg-slate-800/80 text-slate-300 border border-white/5'}">
+                                <button onclick="alternarEtapa(${index}, 'teoria')" ${!eHoje ? 'disabled' : ''} class="py-2 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center text-center ${!eHoje ? 'bg-slate-900/50 text-slate-600 border border-white/5 cursor-not-allowed' : row.teoriaConcluida ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20' : 'bg-slate-800/80 text-slate-300 border border-white/5'}">
                                     ${row.teoriaConcluida ? '✓ Teoria' : '📘 Teoria (19-22h)'}
                                 </button>
-                                <button onclick="alternarEtapa(${index}, 'pratica')" class="py-2 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center text-center ${row.praticaConcluida ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20' : 'bg-slate-800/80 text-slate-300 border border-white/5'}">
+                                <button onclick="alternarEtapa(${index}, 'pratica')" ${!eHoje ? 'disabled' : ''} class="py-2 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center text-center ${!eHoje ? 'bg-slate-900/50 text-slate-600 border border-white/5 cursor-not-allowed' : row.praticaConcluida ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20' : 'bg-slate-800/80 text-slate-300 border border-white/5'}">
                                     ${row.praticaConcluida ? '✓ Prática' : '✏️ Prática (22-23h)'}
                                 </button>
                             </div>
@@ -491,7 +491,7 @@
                     if (row.folga) tr.className = "bg-emerald-950/10 text-emerald-300/80";
                     else if (row.expirado) tr.className = "bg-rose-950/20 text-rose-200 border-l-4 border-l-rose-500";
                     else if (eHoje) tr.className = "bg-indigo-950/30 border-l-4 border-l-cyan-400 font-medium";
-                    else tr.className = "hover:bg-slate-800/40 transition";
+                    else tr.className = "hover:bg-slate-800/40 transition opacity-60";
 
                     tr.innerHTML = `
                         <td class="py-3 px-4 font-bold">
@@ -502,14 +502,14 @@
                         </td>
                         <td class="py-2 px-3 text-center">
                             ${row.folga ? '<span class="text-xs text-slate-600">-</span>' : `
-                                <button onclick="alternarEtapa(${index}, 'teoria')" class="w-full py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 ${row.teoriaConcluida ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20' : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/5'}">
+                                <button onclick="alternarEtapa(${index}, 'teoria')" ${!eHoje ? 'disabled' : ''} class="w-full py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 ${!eHoje ? 'bg-slate-900/50 text-slate-600 border border-white/5 cursor-not-allowed' : row.teoriaConcluida ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20' : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/5'}">
                                     ${row.teoriaConcluida ? '✓ Teoria | +50XP +50🪙' : '📘 Teoria (19h-22h)'}
                                 </button>
                             `}
                         </td>
                         <td class="py-2 px-3 text-center">
                             ${row.folga ? '<span class="text-xs text-slate-600">-</span>' : `
-                                <button onclick="alternarEtapa(${index}, 'pratica')" class="w-full py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 ${row.praticaConcluida ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20' : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/5'}">
+                                <button onclick="alternarEtapa(${index}, 'pratica')" ${!eHoje ? 'disabled' : ''} class="w-full py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 ${!eHoje ? 'bg-slate-900/50 text-slate-600 border border-white/5 cursor-not-allowed' : row.praticaConcluida ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20' : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/5'}">
                                     ${row.praticaConcluida ? '✓ Prática | +50XP +50🪙' : '✏️ Prática (22h-23h)'}
                                 </button>
                             `}
@@ -538,6 +538,12 @@
         }
 
         function alternarEtapa(index, tipo) {
+            // Trava para permitir alteração somente no dia atual
+            if (dados[index].diaIndex !== diaSemanaAtual) {
+                alert("Você só pode marcar ou alterar as tarefas no próprio dia da semana!");
+                return;
+            }
+
             if (tipo === 'teoria') {
                 dados[index].teoriaConcluida = !dados[index].teoriaConcluida;
                 xpAcumuladoTotal += dados[index].teoriaConcluida ? 50 : -50;
