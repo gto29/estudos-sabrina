@@ -53,15 +53,10 @@
             <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-500 text-white flex items-center justify-center text-3xl mx-auto mb-4 shadow-lg shadow-indigo-500/30">
                 ✨
             </div>
-            <h3 class="text-lg font-black text-white mb-2">Mensagem especial para meu amor</h3>
+            <h3 class="text-lg font-black text-white mb-2">Mensagem Especial</h3>
             <div class="bg-indigo-950/30 border border-indigo-500/20 rounded-2xl p-4 my-3 text-left">
                 <p class="text-xs sm:text-sm text-indigo-100 font-medium leading-relaxed">
                     Amor esta aplicação é para você, vamos moldar ela conforme oque você gosta e oque você quer com o aplicativo, preciso sempre de feedbacks para manter o aplicativo interativo ,visualmente bonito e o principal consertar BUGS.
-                    
-                </p>
-                <p class="text-xs sm:text-sm text-indigo-100 font-medium leading-relaxed">
-                    
-                    Aqui você tomara uma penalidade de ouro a cada dia que não ser feito a devida obrigação.
                 </p>
             </div>
             <button onclick="fecharBoasVindas()" class="w-full py-3 bg-gradient-to-r from-violet-600 via-indigo-500 to-cyan-500 text-white rounded-xl text-xs font-black tracking-wider uppercase shadow-lg shadow-indigo-500/25 transition active:scale-95 hover:brightness-110">
@@ -82,7 +77,7 @@
                         ✨
                     </div>
                     <div>
-                        <h1 class="text-sm font-black tracking-tight text-white leading-none">Bem vinda Sabrina</h1>
+                        <h1 class="text-sm font-black tracking-tight text-white leading-none">Sabrina</h1>
                         <p id="hoje-data" class="text-[9px] text-cyan-400 font-bold uppercase tracking-wider mt-0.5">--</p>
                     </div>
                 </div>
@@ -99,7 +94,7 @@
 
                     <!-- Ouro -->
                     <div class="bg-slate-900/90 border border-amber-500/30 px-2 py-1 rounded-xl flex items-center gap-1 shrink-0">
-                        <span class="text-xs">Ouro</span>
+                        <span class="text-xs">🪙</span>
                         <div class="flex flex-col">
                             <div class="text-[10px] font-black text-amber-400 leading-tight"><span id="user-gold">0</span></div>
                         </div>
@@ -128,7 +123,7 @@
             <!-- LINHA 3: BOTÕES DE AÇÃO -->
             <div class="flex items-center gap-2 w-full">
                 <button onclick="abrirLoja()" class="flex-1 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/15 to-yellow-500/15 hover:from-amber-500/25 hover:to-yellow-500/25 text-amber-300 text-[11px] font-bold flex items-center justify-center gap-1 border border-amber-500/30 transition shadow-sm">
-                    <span>🛍️ Loja de Recompensas do Guto</span>
+                    <span>🛍️ Loja</span>
                 </button>
 
                 <button onclick="abrirHistorico()" class="px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 text-[11px] font-bold flex items-center justify-center gap-1.5 border border-slate-700/60 transition shadow-sm">
@@ -285,17 +280,17 @@
         function carregarLocalStorage(chave, padrao) {
             try {
                 const item = localStorage.getItem(chave);
-                return item ? JSON.parse(item) : padrao;
+                return item !== null ? JSON.parse(item) : padrao;
             } catch (e) {
                 return padrao;
             }
         }
 
-        let dados = carregarLocalStorage('estudos_gamificados_dados_v2', dadosPadrao);
-        let penalidades = carregarLocalStorage('estudos_gamificados_penalidades', []);
-        let xpAcumuladoTotal = carregarLocalStorage('estudos_gamificados_xp_total', 0);
-        let goldAcumuladoTotal = carregarLocalStorage('estudos_gamificados_gold_total', 0);
-        let cuponsResgatados = carregarLocalStorage('estudos_gamificados_cupons', []);
+        let dados = carregarLocalStorage('estudos_gamificados_dados_v3', dadosPadrao);
+        let penalidades = carregarLocalStorage('estudos_gamificados_penalidades_v3', []);
+        let xpAcumuladoTotal = Number(carregarLocalStorage('estudos_gamificados_xp_total_v3', 0));
+        let goldAcumuladoTotal = Number(carregarLocalStorage('estudos_gamificados_gold_total_v3', 0));
+        let cuponsResgatados = carregarLocalStorage('estudos_gamificados_cupons_v3', []);
 
         const agora = new Date();
         const diaSemanaAtual = agora.getDay();
@@ -369,7 +364,6 @@
                     if (diaItemNormalizado < diaAtualNormalizado) {
                         item.expirado = true;
                         
-                        // Penalidade aplicada APENAS ao Ouro (-25 Ouros)
                         goldAcumuladoTotal = Math.max(0, goldAcumuladoTotal - 25);
                         
                         mudanca = true;
@@ -387,7 +381,7 @@
 
             if (mudanca) salvarDados();
 
-            if (teveNovaPenalidade || dados.some(d => d.expirado)) {
+            if (teveNovaPenalidade) {
                 setTimeout(() => {
                     const modal = document.getElementById('modal-mensagem-penalidade');
                     if (modal) modal.classList.remove('hidden');
@@ -541,8 +535,6 @@
             let level = Math.floor(xpAcumuladoTotal / 300) + 1;
             document.getElementById('user-level').innerText = `Lvl ${level}`;
             document.getElementById('badge-penalidades').innerText = penalidades.length;
-
-            salvarDados();
         }
 
         function alternarEtapa(index, tipo) {
@@ -559,6 +551,8 @@
             xpAcumuladoTotal = Math.max(0, xpAcumuladoTotal);
             goldAcumuladoTotal = Math.max(0, goldAcumuladoTotal);
             dados[index].expirado = false;
+
+            salvarDados();
             renderizarTabela();
         }
 
@@ -576,6 +570,8 @@
             dados[index].teoriaConcluida = false;
             dados[index].praticaConcluida = false;
             dados[index].expirado = false;
+
+            salvarDados();
             renderizarTabela();
         }
 
@@ -591,17 +587,19 @@
                 dados[index].praticaConcluida = true;
                 xpAcumuladoTotal += 100;
                 goldAcumuladoTotal += 100;
+
+                salvarDados();
                 renderizarTabela();
             }
         }
 
         function salvarDados() {
             try {
-                localStorage.setItem('estudos_gamificados_dados_v2', JSON.stringify(dados));
-                localStorage.setItem('estudos_gamificados_penalidades', JSON.stringify(penalidades));
-                localStorage.setItem('estudos_gamificados_xp_total', JSON.stringify(xpAcumuladoTotal));
-                localStorage.setItem('estudos_gamificados_gold_total', JSON.stringify(goldAcumuladoTotal));
-                localStorage.setItem('estudos_gamificados_cupons', JSON.stringify(cuponsResgatados));
+                localStorage.setItem('estudos_gamificados_dados_v3', JSON.stringify(dados));
+                localStorage.setItem('estudos_gamificados_penalidades_v3', JSON.stringify(penalidades));
+                localStorage.setItem('estudos_gamificados_xp_total_v3', JSON.stringify(xpAcumuladoTotal));
+                localStorage.setItem('estudos_gamificados_gold_total_v3', JSON.stringify(goldAcumuladoTotal));
+                localStorage.setItem('estudos_gamificados_cupons_v3', JSON.stringify(cuponsResgatados));
             } catch (e) {
                 console.warn('LocalStorage indisponível:', e);
             }
@@ -617,6 +615,8 @@
                 cuponsResgatados = [];
                 xpAcumuladoTotal = 0;
                 goldAcumuladoTotal = 0;
+
+                salvarDados();
                 renderizarTabela();
             }
         }
