@@ -47,6 +47,29 @@
 </head>
 <body class="min-h-screen pb-6 selection:bg-indigo-500 selection:text-white">
 
+    <!-- MODAL DE BOAS-VINDAS INICIAL -->
+    <div id="modal-boas-vindas" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="modern-card w-full max-w-md rounded-3xl p-6 shadow-2xl border border-indigo-500/30 text-center relative overflow-hidden">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-500 text-white flex items-center justify-center text-3xl mx-auto mb-4 shadow-lg shadow-indigo-500/30">
+                ✨
+            </div>
+            <h3 class="text-lg font-black text-white mb-2">Mensagem Especial</h3>
+            <div class="bg-indigo-950/30 border border-indigo-500/20 rounded-2xl p-4 my-3 text-left">
+                <p class="text-xs sm:text-sm text-indigo-100 font-medium leading-relaxed">
+                    Amor esta aplicação é para você, vamos moldar ela conforme oque você gosta e oque você quer com o aplicativo, preciso sempre de feedbacks para manter o aplicativo interativo ,visualmente bonito e o principal consertar BUGS.
+                    
+                </p>
+                <p class="text-xs sm:text-sm text-indigo-100 font-medium leading-relaxed">
+                    
+                    Aqui você tomara uma penalidade de ouro a cada dia que não ser feito a devida obrigação
+                </p>
+            </div>
+            <button onclick="fecharBoasVindas()" class="w-full py-3 bg-gradient-to-r from-violet-600 via-indigo-500 to-cyan-500 text-white rounded-xl text-xs font-black tracking-wider uppercase shadow-lg shadow-indigo-500/25 transition active:scale-95 hover:brightness-110">
+                OK
+            </button>
+        </div>
+    </div>
+
     <!-- CABEÇALHO COM MÉTRICAS EMBUTIDAS -->
     <header class="bg-brand-card/90 backdrop-blur-md border-b border-white/5 sticky top-0 z-30">
         <div class="max-w-6xl mx-auto px-3 py-3 flex flex-col gap-2.5">
@@ -59,7 +82,7 @@
                         ✨
                     </div>
                     <div>
-                        <h1 class="text-sm font-black tracking-tight text-white leading-none"> Bem Vinda Sabrina</h1>
+                        <h1 class="text-sm font-black tracking-tight text-white leading-none">Bem vinda Sabrina</h1>
                         <p id="hoje-data" class="text-[9px] text-cyan-400 font-bold uppercase tracking-wider mt-0.5">--</p>
                     </div>
                 </div>
@@ -76,7 +99,7 @@
 
                     <!-- Ouro -->
                     <div class="bg-slate-900/90 border border-amber-500/30 px-2 py-1 rounded-xl flex items-center gap-1 shrink-0">
-                        <span class="text-xs">🪙</span>
+                        <span class="text-xs">Ouro</span>
                         <div class="flex flex-col">
                             <div class="text-[10px] font-black text-amber-400 leading-tight"><span id="user-gold">0</span></div>
                         </div>
@@ -92,10 +115,20 @@
                 </div>
             </div>
 
-            <!-- LINHA 2: BOTÕES DE AÇÃO -->
+            <!-- LINHA DE CONTAGEM REGRESSIVA EM TEMPO REAL -->
+            <div class="bg-indigo-950/40 border border-indigo-500/20 rounded-xl px-3 py-1.5 flex items-center justify-between text-xs">
+                <span class="text-[10px] font-bold text-indigo-300 flex items-center gap-1">
+                    <span>⏳</span> Reinício das tarefas semanais:
+                </span>
+                <span id="contador-regressivo" class="font-mono font-black text-cyan-300 text-xs tracking-wider">
+                    00d 00h 00m 00s
+                </span>
+            </div>
+
+            <!-- LINHA 3: BOTÕES DE AÇÃO -->
             <div class="flex items-center gap-2 w-full">
                 <button onclick="abrirLoja()" class="flex-1 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/15 to-yellow-500/15 hover:from-amber-500/25 hover:to-yellow-500/25 text-amber-300 text-[11px] font-bold flex items-center justify-center gap-1 border border-amber-500/30 transition shadow-sm">
-                    <span>🛍️ Loja de Recompensa do Guto</span>
+                    <span>🛍️ Loja de Recompensas do Guto</span>
                 </button>
 
                 <button onclick="abrirHistorico()" class="px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 text-[11px] font-bold flex items-center justify-center gap-1.5 border border-slate-700/60 transition shadow-sm">
@@ -113,7 +146,7 @@
 
     <main class="max-w-6xl mx-auto px-3 pt-3">
 
-        <!-- LISTA / CRONOGRAMA SEMANAL (AGORA NO TOPO DA PÁGINA) -->
+        <!-- LISTA / CRONOGRAMA SEMANAL -->
         <div class="modern-card rounded-2xl overflow-hidden shadow-2xl mb-6 border border-white/10">
             <div class="p-3 border-b border-white/5 bg-slate-950/40 flex justify-between items-center">
                 <h2 class="font-extrabold text-slate-200 text-xs flex items-center gap-2">
@@ -209,6 +242,7 @@
                 💔
             </div>
             <h3 class="text-lg font-black text-white mb-1">Você teve uma penalidade!</h3>
+            <p class="text-xs text-rose-300 font-bold mb-2">-25 Moedas de Ouro 🪙</p>
             <div class="bg-rose-950/30 border border-rose-500/20 rounded-2xl p-5 my-4">
                 <p class="text-sm italic text-rose-200 font-semibold leading-relaxed">
                     "Meu amor, não deixe de estudar. Consolide suas ideias para se tornar realidade"
@@ -262,32 +296,64 @@
         let xpAcumuladoTotal = carregarLocalStorage('estudos_gamificados_xp_total', 0);
         let goldAcumuladoTotal = carregarLocalStorage('estudos_gamificados_gold_total', 0);
         let cuponsResgatados = carregarLocalStorage('estudos_gamificados_cupons', []);
-        let ultimaSemanaAno = localStorage.getItem('estudos_gamificados_ultima_semana') || '';
 
         const agora = new Date();
         const diaSemanaAtual = agora.getDay();
 
-        function getSemanaAtual(d) {
-            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-            var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-            var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-            return `${d.getUTCFullYear()}-W${weekNo}`;
+        function fecharBoasVindas() {
+            const modal = document.getElementById('modal-boas-vindas');
+            if (modal) modal.classList.add('hidden');
         }
 
-        function checarResetSemanal() {
-            const semanaAtual = getSemanaAtual(agora);
-            if (ultimaSemanaAno && ultimaSemanaAno !== semanaAtual) {
-                dados.forEach(item => {
-                    item.teoriaConcluida = false;
-                    item.praticaConcluida = false;
-                    item.expirado = false;
-                });
-                localStorage.setItem('estudos_gamificados_ultima_semana', semanaAtual);
-                salvarDados();
-            } else if (!ultimaSemanaAno) {
-                localStorage.setItem('estudos_gamificados_ultima_semana', semanaAtual);
+        /* --- CONTAGEM REGRESSIVA E RESET DE SÁBADO ÀS 23:59 --- */
+        function getProximoSabadoReset() {
+            const now = new Date();
+            const target = new Date(now);
+            const dayOfWeek = now.getDay();
+            
+            let daysUntilSabado = (6 - dayOfWeek + 7) % 7;
+            
+            if (daysUntilSabado === 0 && (now.getHours() > 23 || (now.getHours() === 23 && now.getMinutes() === 59 && now.getSeconds() === 59))) {
+                daysUntilSabado = 7;
             }
+
+            target.setDate(now.getDate() + daysUntilSabado);
+            target.setHours(23, 59, 59, 999);
+            return target;
+        }
+
+        let proximoSabadoReset = new Date(localStorage.getItem('estudos_gamificados_proximo_reset')) || getProximoSabadoReset();
+
+        function atualizarContagemRegressiva() {
+            const now = new Date();
+            
+            if (now >= proximoSabadoReset) {
+                executarResetSemanalOpcoes();
+                proximoSabadoReset = getProximoSabadoReset();
+                localStorage.setItem('estudos_gamificados_proximo_reset', proximoSabadoReset.toISOString());
+            }
+
+            const diff = proximoSabadoReset - now;
+
+            const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const horas = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutos = Math.floor((diff / 1000 / 60) % 60);
+            const segundos = Math.floor((diff / 1000) % 60);
+
+            const elContador = document.getElementById('contador-regressivo');
+            if (elContador) {
+                elContador.innerText = `${dias}d ${horas.toString().padStart(2, '0')}h ${minutos.toString().padStart(2, '0')}m ${segundos.toString().padStart(2, '0')}s`;
+            }
+        }
+
+        function executarResetSemanalOpcoes() {
+            dados.forEach(item => {
+                item.teoriaConcluida = false;
+                item.praticaConcluida = false;
+                item.expirado = false;
+            });
+            salvarDados();
+            renderizarTabela();
         }
 
         function checarPenalidadesAutomaticas() {
@@ -302,16 +368,18 @@
 
                     if (diaItemNormalizado < diaAtualNormalizado) {
                         item.expirado = true;
-                        xpAcumuladoTotal = Math.max(0, xpAcumuladoTotal - 50);
-                        goldAcumuladoTotal = Math.max(0, goldAcumuladoTotal - 50);
+                        
+                        // Penalidade aplicada APENAS ao Ouro (-25 Ouros)
+                        goldAcumuladoTotal = Math.max(0, goldAcumuladoTotal - 25);
+                        
                         mudanca = true;
                         teveNovaPenalidade = true;
                         
                         penalidades.unshift({
                             dia: item.dia,
-                            xpPerdido: 50,
+                            goldPerdido: 25,
                             data: new Date().toLocaleDateString('pt-BR') + ' às 23:59:59',
-                            motivo: 'Incompleto ou pendente no prazo'
+                            motivo: 'Tarefa diária não realizada até o final do dia'
                         });
                     }
                 }
@@ -517,7 +585,7 @@
         }
 
         function relevarPenalidade(index) {
-            if (confirm("Deseja concluir o dia completo e recuperar seu XP e Ouro?")) {
+            if (confirm("Deseja concluir o dia completo e recuperar suas moedas de ouro?")) {
                 dados[index].expirado = false;
                 dados[index].teoriaConcluida = true;
                 dados[index].praticaConcluida = true;
@@ -632,7 +700,7 @@
                             <div class="font-bold text-slate-200">${p.dia}</div>
                             <div class="text-[10px] text-slate-400">${p.data} - ${p.motivo}</div>
                         </div>
-                        <span class="font-extrabold text-rose-300 bg-rose-500/10 px-2 py-1 rounded-lg border border-rose-500/20">-${p.xpPerdido} XP / Ouro</span>
+                        <span class="font-extrabold text-amber-300 bg-amber-500/10 px-2 py-1 rounded-lg border border-amber-500/20">-${p.goldPerdido} 🪙 Ouro</span>
                     `;
                     container.appendChild(item);
                 });
@@ -664,10 +732,12 @@
         window.addEventListener('resize', renderizarTabela);
 
         document.addEventListener('DOMContentLoaded', () => {
-            checarResetSemanal();
             checarPenalidadesAutomaticas();
             renderizarTabela();
             iniciarContador();
+            
+            atualizarContagemRegressiva();
+            setInterval(atualizarContagemRegressiva, 1000);
         });
     </script>
 </body>
