@@ -10,11 +10,11 @@
             theme: {
                 extend: {
                     colors: {
-                        app: {
-                            bg: '#0b1329',
-                            card: '#111c44',
-                            cardHover: '#1b2a5a',
-                            border: '#23356f'
+                        brand: {
+                            bg: '#090d16',
+                            card: '#121829',
+                            accent: '#6366f1',
+                            glow: '#8b5cf6'
                         }
                     }
                 }
@@ -25,16 +25,16 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #0b1329;
-            color: #f1f5f9;
+            background-color: #090d16;
+            color: #f8fafc;
             -webkit-tap-highlight-color: transparent;
         }
-        .glass-card {
-            background: linear-gradient(135deg, rgba(17, 28, 68, 0.85) 0%, rgba(15, 23, 42, 0.75) 100%);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        .modern-card {
+            background: rgba(18, 24, 41, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.6);
         }
         .pulse-badge {
             animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -45,231 +45,194 @@
         }
     </style>
 </head>
-<body class="min-h-screen pb-12 selection:bg-purple-500 selection:text-white">
+<body class="min-h-screen pb-6 selection:bg-indigo-500 selection:text-white">
 
-    <!-- CABEÇALHO -->
-    <header class="bg-app-card/80 backdrop-blur-md border-b border-app-border sticky top-0 z-30">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+    <!-- CABEÇALHO COM MÉTRICAS EMBUTIDAS -->
+    <header class="bg-brand-card/90 backdrop-blur-md border-b border-white/5 sticky top-0 z-30">
+        <div class="max-w-6xl mx-auto px-3 py-3 flex flex-col gap-2.5">
             
-            <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-gradient-to-tr from-violet-600 via-indigo-500 to-cyan-400 flex items-center justify-center font-bold text-lg md:text-xl shadow-lg shadow-indigo-500/20">
-                        🎓
+            <!-- LINHA 1: USUÁRIO + MÉTRICAS LADO A LADO -->
+            <div class="flex items-center justify-between gap-2">
+                <!-- Nome / Perfil -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-violet-600 via-indigo-500 to-cyan-400 flex items-center justify-center font-bold text-base shadow-md shadow-indigo-500/20">
+                        ✨
                     </div>
                     <div>
-                        <h1 class="text-lg md:text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 leading-tight">Bem vinda Sabrina</h1>
-                        <p class="text-[11px] md:text-xs text-slate-400 flex items-center gap-2">
-                            <span>Meta: 6 Dias</span>
-                            <span class="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
-                            <span id="hoje-data" class="text-cyan-400 font-semibold uppercase tracking-wider text-[10px] md:text-[11px]">--</span>
-                        </p>
+                        <h1 class="text-sm font-black tracking-tight text-white leading-none"> Bem Vinda Sabrina</h1>
+                        <p id="hoje-data" class="text-[9px] text-cyan-400 font-bold uppercase tracking-wider mt-0.5">--</p>
+                    </div>
+                </div>
+
+                <!-- Métricas Compactas -->
+                <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+                    <!-- Level & XP -->
+                    <div class="bg-slate-900/90 border border-violet-500/30 px-2 py-1 rounded-xl flex items-center gap-1.5 shrink-0">
+                        <span id="user-level" class="text-[9px] font-black text-violet-300 bg-violet-500/20 px-1 rounded border border-violet-500/30">Lvl 1</span>
+                        <div class="flex flex-col">
+                            <div class="text-[10px] font-black text-white leading-tight"><span id="user-xp">0</span> <span class="text-[8px] text-violet-400 font-normal">XP</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Ouro -->
+                    <div class="bg-slate-900/90 border border-amber-500/30 px-2 py-1 rounded-xl flex items-center gap-1 shrink-0">
+                        <span class="text-xs">🪙</span>
+                        <div class="flex flex-col">
+                            <div class="text-[10px] font-black text-amber-400 leading-tight"><span id="user-gold">0</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Horas -->
+                    <div class="bg-slate-900/90 border border-cyan-500/30 px-2 py-1 rounded-xl flex items-center gap-1 shrink-0">
+                        <span class="text-xs">⏱️</span>
+                        <div class="flex flex-col">
+                            <div class="text-[10px] font-black text-cyan-400 leading-tight"><span id="total-horas">0h</span><span class="text-[8px] text-slate-400 font-normal">/24h</span></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="flex items-center gap-2 w-full md:w-auto justify-end flex-wrap">
-                <button onclick="abrirLoja()" class="flex-1 md:flex-none px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 to-yellow-500/20 hover:from-amber-500/30 hover:to-yellow-500/30 text-amber-300 text-xs font-semibold flex items-center justify-center gap-1.5 border border-amber-500/30 transition shadow-sm">
-                    <span>🛍️Loja de recompensas</span>
+            <!-- LINHA 2: BOTÕES DE AÇÃO -->
+            <div class="flex items-center gap-2 w-full">
+                <button onclick="abrirLoja()" class="flex-1 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/15 to-yellow-500/15 hover:from-amber-500/25 hover:to-yellow-500/25 text-amber-300 text-[11px] font-bold flex items-center justify-center gap-1 border border-amber-500/30 transition shadow-sm">
+                    <span>🛍️ Loja de Recompensa do Guto</span>
                 </button>
 
-                <button onclick="abrirHistorico()" class="px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center justify-center gap-2 border border-slate-700/80 transition shadow-sm">
+                <button onclick="abrirHistorico()" class="px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 text-[11px] font-bold flex items-center justify-center gap-1.5 border border-slate-700/60 transition shadow-sm">
                     <span>⚠️ Penalidades</span>
-                    <span id="badge-penalidades" class="bg-rose-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold shadow-sm shadow-rose-500/40">0</span>
+                    <span id="badge-penalidades" class="bg-rose-500 text-white text-[9px] px-1.5 py-0.2 rounded-full font-black shadow-sm shadow-rose-500/40">0</span>
                 </button>
 
-                <button onclick="resetarTudo()" class="px-3 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs font-semibold border border-rose-500/30 transition">
+                <button onclick="resetarTudo()" class="px-2.5 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-[11px] font-bold border border-rose-500/20 transition">
                     Restaurar
                 </button>
             </div>
+
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 pt-6 md:pt-8">
+    <main class="max-w-6xl mx-auto px-3 pt-3">
 
-        <!-- PAINEL DE MÉTRICAS -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
-            
-            <!-- XP -->
-            <div class="glass-card rounded-2xl p-4 md:p-5 group hover:border-violet-500/40 transition-all">
-                <div class="flex justify-between items-start mb-2">
-                    <span class="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-violet-300/80">Nível & XP</span>
-                    <span id="user-level" class="text-[10px] md:text-xs font-extrabold px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/40 shadow-sm">Lvl 1</span>
-                </div>
-                <div class="flex items-baseline gap-1.5 mb-2">
-                    <span id="user-xp" class="text-2xl md:text-3xl font-black text-white tracking-tight">0</span>
-                    <span class="text-[10px] md:text-xs text-violet-300/60 font-medium">XP Total</span>
-                </div>
-                <div class="w-full bg-slate-900/80 h-2 rounded-full overflow-hidden p-0.5 border border-slate-700/50">
-                    <div id="bar-xp" class="bg-gradient-to-r from-violet-600 to-indigo-400 h-full rounded-full w-0 transition-all duration-500"></div>
-                </div>
-                <div id="user-title" class="text-[10px] md:text-[11px] text-indigo-300 font-semibold mt-2 truncate">Iniciante</div>
-            </div>
-
-            <!-- OURO -->
-            <div class="glass-card rounded-2xl p-4 md:p-5 group hover:border-amber-500/40 transition-all">
-                <span class="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-amber-300/80 block mb-2">Carteira de Ouro</span>
-                <div class="flex items-baseline gap-1.5 mb-2">
-                    <span id="user-gold" class="text-2xl md:text-3xl font-black text-amber-400 tracking-tight">0</span>
-                    <span class="text-[10px] md:text-xs text-amber-300/60 font-medium">Moedas 🪙</span>
-                </div>
-                <button onclick="abrirLoja()" class="w-full mt-2 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg text-[11px] font-bold transition">
-                    Ver Loja de Motivações
-                </button>
-            </div>
-
-            <!-- HORAS -->
-            <div class="glass-card rounded-2xl p-4 md:p-5 group hover:border-cyan-500/40 transition-all">
-                <span class="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-cyan-300/80 block mb-2">Horas / Semana</span>
-                <div class="flex items-baseline gap-1.5 mb-2">
-                    <span id="total-horas" class="text-2xl md:text-3xl font-black text-cyan-400 tracking-tight">0h</span>
-                    <span class="text-[10px] md:text-xs text-slate-400">/ 24h</span>
-                </div>
-                <div class="w-full bg-slate-900/80 h-2 rounded-full overflow-hidden p-0.5 border border-slate-700/50">
-                    <div id="bar-horas" class="bg-gradient-to-r from-cyan-500 to-teal-400 h-full rounded-full w-0 transition-all duration-500"></div>
-                </div>
-                <span id="text-dias" class="text-[10px] md:text-[11px] text-slate-400 font-medium mt-2 block truncate">0h de 24h concluidas</span>
-            </div>
-
-            <!-- REGRAS -->
-            <div class="glass-card rounded-2xl p-4 md:p-5 group hover:border-emerald-500/40 transition-all">
-                <span class="text-[10px] md:text-[11px] font-bold uppercase tracking-wider text-slate-300 block mb-2">Recompensas / Etapa</span>
-                <div class="space-y-1 text-[11px]">
-                    <div class="flex justify-between text-emerald-400 font-semibold">
-                        <span>Teoria (19-22h):</span>
-                        <span class="bg-emerald-500/10 px-1 rounded border border-emerald-500/20">+50 XP | +50 🪙</span>
-                    </div>
-                    <div class="flex justify-between text-emerald-400 font-semibold">
-                        <span>Prática (22-23h):</span>
-                        <span class="bg-emerald-500/10 px-1 rounded border border-emerald-500/20">+50 XP | +50 🪙</span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- LISTA / CRONOGRAMA ADAPTADO PARA O CELULAR -->
-        <div class="glass-card rounded-2xl overflow-hidden shadow-2xl mb-12 border border-app-border">
-            <div class="p-4 border-b border-app-border bg-slate-900/60 flex justify-between items-center">
-                <h2 class="font-bold text-slate-200 text-xs md:text-sm flex items-center gap-2">
-                    <span>📅 Cronograma Semanal</span>
+        <!-- LISTA / CRONOGRAMA SEMANAL (AGORA NO TOPO DA PÁGINA) -->
+        <div class="modern-card rounded-2xl overflow-hidden shadow-2xl mb-6 border border-white/10">
+            <div class="p-3 border-b border-white/5 bg-slate-950/40 flex justify-between items-center">
+                <h2 class="font-extrabold text-slate-200 text-xs flex items-center gap-2">
+                    <span>📅 CRONOGRAMA SEMANAL</span>
                 </h2>
+                <div class="text-[10px] text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                    +50 XP/🪙 por etapa
+                </div>
             </div>
 
-            <!-- CONTAINER RESPONSIVO (CARDS NO CELULAR, TABELA NO COMPUTADOR) -->
-            <div id="cronograma-container" class="p-3 md:p-0">
+            <div id="cronograma-container" class="p-2.5 md:p-0">
                 <!-- Gerado via JS -->
             </div>
         </div>
 
     </main>
 
-    <!-- MODAL LOJA DE VALE PRESENTES -->
-    <div id="modal-loja" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-        <div class="glass-card w-full max-w-2xl rounded-2xl p-6 shadow-2xl relative border border-slate-700 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-4 pb-3 border-b border-app-border">
+    <!-- MODAL LOJA -->
+    <div id="modal-loja" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
+        <div class="modern-card w-full max-w-2xl rounded-3xl p-6 shadow-2xl relative border border-white/10 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/5">
                 <div>
-                    <h3 class="font-bold text-lg text-amber-400 flex items-center gap-2">
-                        <span>🛍️ Loja da Motivação do guto</span>
+                    <h3 class="font-black text-lg text-amber-400 flex items-center gap-2">
+                        <span>🛍️ Loja da Motivação do Guto</span>
                     </h3>
-                    <p class="text-xs text-slate-400">Aqui está uma pequena motivação feita por mim para você amor, continue estudando que você será recompensada.</p>
+                    <p class="text-xs text-slate-400 mt-1">Aqui está uma pequena motivação para você amor, continue estudando!</p>
                 </div>
-                <button onclick="fecharLoja()" class="text-slate-400 hover:text-white font-bold text-xl">&times;</button>
+                <button onclick="fecharLoja()" class="text-slate-400 hover:text-white font-bold text-2xl">&times;</button>
             </div>
 
-            <!-- Resumo da Carteira na Loja -->
-            <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 mb-6 flex justify-between items-center">
-                <span class="text-xs font-semibold text-amber-200">Seu Saldo Atual:</span>
-                <div class="flex items-center gap-1">
-                    <span id="loja-gold-saldo" class="text-lg font-black text-amber-400">0</span>
-                    <span class="text-xs">🪙 Ouro</span>
+            <div class="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-3.5 mb-6 flex justify-between items-center">
+                <span class="text-xs font-bold text-amber-200">Seu Saldo Atual:</span>
+                <div class="flex items-center gap-1.5">
+                    <span id="loja-gold-saldo" class="text-xl font-black text-amber-400">0</span>
+                    <span class="text-xs font-bold text-amber-300">🪙 Ouro</span>
                 </div>
             </div>
 
-            <!-- Opções de Cupons -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <!-- Voucher R$ 50 -->
-                <div class="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 flex flex-col justify-between items-center text-center">
-                    <div class="text-2xl mb-1">🎁</div>
+                <!-- R$ 50 -->
+                <div class="bg-slate-900/90 border border-white/5 rounded-2xl p-4 flex flex-col justify-between items-center text-center">
+                    <div class="text-3xl mb-1">🎁</div>
                     <div class="font-black text-lg text-white">R$ 50,00</div>
-                    <div class="text-[11px] text-slate-400 mb-3">Vale Shopping PRO MEU AMOR</div>
-                    <div class="bg-amber-500/20 text-amber-300 font-extrabold text-xs px-2.5 py-1 rounded-full mb-3 border border-amber-500/30">
+                    <div class="text-[11px] text-slate-400 mb-3">Vale Shopping Pro Meu Amor</div>
+                    <div class="bg-amber-500/20 text-amber-300 font-black text-xs px-3 py-1 rounded-full mb-3 border border-amber-500/30">
                         1.500 🪙 Ouros
                     </div>
-                    <button onclick="resgatarCupom(50, 1000)" class="w-full py-2 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-slate-950 font-extrabold text-xs rounded-xl shadow-md transition">
+                    <button onclick="resgatarCupom(50, 1500)" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-slate-950 font-black text-xs rounded-xl shadow-md transition">
                         Resgatar
                     </button>
                 </div>
 
-                <!-- Voucher R$ 100 -->
-                <div class="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 flex flex-col justify-between items-center text-center relative overflow-hidden">
-                    <div class="bg-violet-600 text-white text-[9px] font-black uppercase px-6 py-0.5 absolute -right-6 top-3 rotate-45 shadow">Bônus</div>
-                    <div class="text-2xl mb-1">💳</div>
+                <!-- R$ 100 -->
+                <div class="bg-slate-900/90 border border-white/5 rounded-2xl p-4 flex flex-col justify-between items-center text-center relative overflow-hidden">
+                    <div class="bg-violet-600 text-white text-[8px] font-black uppercase px-6 py-0.5 absolute -right-6 top-3 rotate-45 shadow">Bônus</div>
+                    <div class="text-3xl mb-1">💳</div>
                     <div class="font-black text-lg text-white">R$ 100,00</div>
-                    <div class="text-[11px] text-slate-400 mb-3">Vale Shopping PRO MEU AMOR</div>
-                    <div class="bg-amber-500/20 text-amber-300 font-extrabold text-xs px-2.5 py-1 rounded-full mb-3 border border-amber-500/30">
+                    <div class="text-[11px] text-slate-400 mb-3">Vale Shopping Pro Meu Amor</div>
+                    <div class="bg-amber-500/20 text-amber-300 font-black text-xs px-3 py-1 rounded-full mb-3 border border-amber-500/30">
                         2.300 🪙 Ouros
                     </div>
-                    <button onclick="resgatarCupom(100, 1800)" class="w-full py-2 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-slate-950 font-extrabold text-xs rounded-xl shadow-md transition">
+                    <button onclick="resgatarCupom(100, 2300)" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-slate-950 font-black text-xs rounded-xl shadow-md transition">
                         Resgatar
                     </button>
                 </div>
 
-                <!-- Voucher R$ 200 -->
-                <div class="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 flex flex-col justify-between items-center text-center relative overflow-hidden">
-                    <div class="bg-emerald-500 text-slate-950 text-[9px] font-black uppercase px-6 py-0.5 absolute -right-6 top-3 rotate-45 shadow">Melhor Oferta</div>
-                    <div class="text-2xl mb-1">👑</div>
+                <!-- R$ 200 -->
+                <div class="bg-slate-900/90 border border-white/5 rounded-2xl p-4 flex flex-col justify-between items-center text-center relative overflow-hidden">
+                    <div class="bg-emerald-500 text-slate-950 text-[8px] font-black uppercase px-6 py-0.5 absolute -right-6 top-3 rotate-45 shadow">Top Oferta</div>
+                    <div class="text-3xl mb-1">👑</div>
                     <div class="font-black text-lg text-white">R$ 200,00</div>
-                    <div class="text-[11px] text-slate-400 mb-3">Vale Shopping PRO MEU AMOR</div>
-                    <div class="bg-amber-500/20 text-amber-300 font-extrabold text-xs px-2.5 py-1 rounded-full mb-3 border border-amber-500/30">
+                    <div class="text-[11px] text-slate-400 mb-3">Vale Shopping Pro Meu Amor</div>
+                    <div class="bg-amber-500/20 text-amber-300 font-black text-xs px-3 py-1 rounded-full mb-3 border border-amber-500/30">
                         3.700 🪙 Ouros
                     </div>
-                    <button onclick="resgatarCupom(200, 3200)" class="w-full py-2 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-slate-950 font-extrabold text-xs rounded-xl shadow-md transition">
+                    <button onclick="resgatarCupom(200, 3700)" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-slate-950 font-black text-xs rounded-xl shadow-md transition">
                         Resgatar
                     </button>
                 </div>
             </div>
 
-            <!-- Meus Resgates -->
-            <div class="pt-4 border-t border-app-border">
+            <div class="pt-4 border-t border-white/5">
                 <h4 class="font-bold text-xs uppercase tracking-wider text-slate-400 mb-3">🎟️ Meus Cupons Resgatados</h4>
-                <div id="container-cupons" class="space-y-2 max-h-40 overflow-y-auto pr-1">
-                    <!-- Gerado via JS -->
-                </div>
+                <div id="container-cupons" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
             </div>
         </div>
     </div>
 
     <!-- MODAL PENALIDADE -->
-    <div id="modal-mensagem-penalidade" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
-        <div class="glass-card w-full max-w-md rounded-3xl p-6 shadow-2xl border border-rose-500/40 text-center relative overflow-hidden">
+    <div id="modal-mensagem-penalidade" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
+        <div class="modern-card w-full max-w-md rounded-3xl p-6 shadow-2xl border border-rose-500/30 text-center relative overflow-hidden">
             <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-rose-500 to-pink-500 text-white flex items-center justify-center text-3xl mx-auto mb-4 shadow-lg shadow-rose-500/30">
                 💔
             </div>
-            <h3 class="text-lg font-bold text-white mb-1">Você teve uma penalidade!</h3>
-            <div class="bg-rose-950/40 border border-rose-500/30 rounded-2xl p-5 my-4 shadow-inner">
+            <h3 class="text-lg font-black text-white mb-1">Você teve uma penalidade!</h3>
+            <div class="bg-rose-950/30 border border-rose-500/20 rounded-2xl p-5 my-4">
                 <p class="text-sm italic text-rose-200 font-semibold leading-relaxed">
-                    "Meu amor , não deixe de estudar. Consolide suas ideias para se tornar realidade"
+                    "Meu amor, não deixe de estudar. Consolide suas ideias para se tornar realidade"
                 </p>
             </div>
-            <button onclick="fecharMensagemPenalidade()" class="w-full py-3.5 bg-gradient-to-r from-rose-500 via-pink-600 to-violet-600 hover:from-rose-600 hover:to-violet-700 text-white rounded-xl text-xs font-extrabold tracking-wide uppercase shadow-lg shadow-rose-500/25 transition transform active:scale-95">
+            <button onclick="fecharMensagemPenalidade()" class="w-full py-3.5 bg-gradient-to-r from-rose-500 via-pink-600 to-violet-600 text-white rounded-xl text-xs font-black tracking-wider uppercase shadow-lg shadow-rose-500/20 transition active:scale-95">
                 Entendido, vou focar! ✨
             </button>
         </div>
     </div>
 
     <!-- MODAL HISTÓRICO -->
-    <div id="modal-historico" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-        <div class="glass-card w-full max-w-lg rounded-2xl p-6 shadow-2xl relative border border-slate-700">
-            <div class="flex justify-between items-center mb-4 pb-3 border-b border-app-border">
-                <h3 class="font-bold text-base md:text-lg text-rose-400 flex items-center gap-2">
+    <div id="modal-historico" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
+        <div class="modern-card w-full max-w-lg rounded-3xl p-6 shadow-2xl relative border border-white/10">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/5">
+                <h3 class="font-black text-base text-rose-400 flex items-center gap-2">
                     <span>⚠️ Histórico de Penalidades</span>
                 </h3>
                 <button onclick="fecharHistorico()" class="text-slate-400 hover:text-white font-bold text-xl">&times;</button>
             </div>
-            <div id="conteudo-historico" class="space-y-3 max-h-80 overflow-y-auto pr-2"></div>
-            <div class="mt-6 flex justify-between items-center pt-3 border-t border-app-border">
+            <div id="conteudo-historico" class="space-y-2.5 max-h-80 overflow-y-auto pr-1"></div>
+            <div class="mt-6 flex justify-between items-center pt-3 border-t border-white/5">
                 <button onclick="limparHistorico()" class="text-xs text-slate-400 hover:text-rose-400 transition font-medium">Limpar Histórico</button>
-                <button onclick="fecharHistorico()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold border border-slate-700">Fechar</button>
+                <button onclick="fecharHistorico()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold border border-slate-700">Fechar</button>
             </div>
         </div>
     </div>
@@ -376,12 +339,11 @@
             container.innerHTML = '';
             let totalHorasSemana = 0;
 
-            // Renderização Mobile (Cards empilhados)
             const isMobile = window.innerWidth < 768;
 
             if (isMobile) {
                 const mobileList = document.createElement('div');
-                mobileList.className = "space-y-3";
+                mobileList.className = "space-y-2.5";
 
                 dados.forEach((row, index) => {
                     const eHoje = row.diaIndex === diaSemanaAtual;
@@ -390,44 +352,44 @@
                         if (row.praticaConcluida) totalHorasSemana += 1;
                     }
 
-                    let cardBg = "bg-slate-900/60 border-slate-800";
-                    if (row.folga) cardBg = "bg-emerald-950/20 border-emerald-500/30";
-                    else if (row.expirado) cardBg = "bg-rose-950/30 border-rose-500/40";
-                    else if (eHoje) cardBg = "bg-cyan-950/30 border-cyan-500/50";
+                    let cardBg = "bg-slate-900/40 border-white/5";
+                    if (row.folga) cardBg = "bg-emerald-950/20 border-emerald-500/20";
+                    else if (row.expirado) cardBg = "bg-rose-950/30 border-rose-500/30";
+                    else if (eHoje) cardBg = "bg-indigo-950/40 border-indigo-500/40 shadow-lg shadow-indigo-500/5";
 
                     const card = document.createElement('div');
-                    card.className = `p-3.5 rounded-xl border ${cardBg} flex flex-col gap-2.5`;
+                    card.className = `p-3 rounded-2xl border ${cardBg} flex flex-col gap-2.5 transition`;
 
                     card.innerHTML = `
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
-                                <span class="font-bold text-sm text-white">${row.dia}</span>
-                                ${eHoje ? `<span class="px-1.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-[9px] font-bold border border-cyan-500/40 pulse-badge">HOJE</span>` : ''}
+                                <span class="font-extrabold text-xs text-white">${row.dia}</span>
+                                ${eHoje ? `<span class="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-[8px] font-black border border-cyan-500/30 pulse-badge">HOJE</span>` : ''}
                             </div>
                             <label class="flex items-center gap-1.5 text-xs text-slate-400 cursor-pointer">
-                                <span>Folga</span>
-                                <input type="checkbox" ${row.folga ? 'checked' : ''} onchange="alternarFolga(${index})" class="w-4 h-4 rounded border-slate-700 bg-slate-900 text-emerald-500 focus:ring-0">
+                                <span class="font-bold text-[10px]">Folga</span>
+                                <input type="checkbox" ${row.folga ? 'checked' : ''} onchange="alternarFolga(${index})" class="w-3.5 h-3.5 rounded border-slate-700 bg-slate-900 text-emerald-500 focus:ring-0">
                             </label>
                         </div>
 
                         <div>
                             <input type="text" value="${row.materia}" onchange="atualizarMateria(${index}, this.value)" 
-                                class="w-full bg-slate-950/70 border border-slate-700/60 rounded-lg px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-violet-500 ${row.folga ? 'opacity-40' : ''}" ${row.folga ? 'disabled' : ''}>
+                                class="w-full bg-slate-950/80 border border-white/10 rounded-xl px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 font-medium ${row.folga ? 'opacity-30' : ''}" ${row.folga ? 'disabled' : ''}>
                         </div>
 
                         ${!row.folga ? `
-                            <div class="grid grid-cols-2 gap-2 pt-1">
-                                <button onclick="alternarEtapa(${index}, 'teoria')" class="py-2 px-1.5 rounded-lg text-[11px] font-bold transition flex items-center justify-center text-center ${row.teoriaConcluida ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-300 border border-slate-700'}">
+                            <div class="grid grid-cols-2 gap-2 pt-0.5">
+                                <button onclick="alternarEtapa(${index}, 'teoria')" class="py-2 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center text-center ${row.teoriaConcluida ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20' : 'bg-slate-800/80 text-slate-300 border border-white/5'}">
                                     ${row.teoriaConcluida ? '✓ Teoria' : '📘 Teoria (19-22h)'}
                                 </button>
-                                <button onclick="alternarEtapa(${index}, 'pratica')" class="py-2 px-1.5 rounded-lg text-[11px] font-bold transition flex items-center justify-center text-center ${row.praticaConcluida ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-300 border border-slate-700'}">
+                                <button onclick="alternarEtapa(${index}, 'pratica')" class="py-2 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center text-center ${row.praticaConcluida ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20' : 'bg-slate-800/80 text-slate-300 border border-white/5'}">
                                     ${row.praticaConcluida ? '✓ Prática' : '✏️ Prática (22-23h)'}
                                 </button>
                             </div>
                         ` : ''}
 
                         ${row.expirado ? `
-                            <button onclick="relevarPenalidade(${index})" class="w-full py-1 text-[11px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 rounded-lg">
+                            <button onclick="relevarPenalidade(${index})" class="w-full py-1.5 text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 rounded-xl">
                                 Expirado ⚠️ (Clique para refazer)
                             </button>
                         ` : ''}
@@ -437,21 +399,20 @@
                 container.appendChild(mobileList);
 
             } else {
-                // Renderização Desktop (Tabela Completa)
                 const table = document.createElement('table');
                 table.className = "w-full text-left border-collapse";
                 table.innerHTML = `
                     <thead>
-                        <tr class="border-b border-app-border text-[11px] font-bold uppercase text-slate-400 bg-slate-900/40">
-                            <th class="py-4 px-4 w-[16%]">Dia</th>
-                            <th class="py-4 px-4 w-[24%] text-center">Etapa 1: Teoria (19h-22h)</th>
-                            <th class="py-4 px-4 w-[24%] text-center">Etapa 2: Prática (22h-23h)</th>
-                            <th class="py-4 px-4 w-[20%]">Matéria / Conteúdo</th>
-                            <th class="py-4 px-4 w-[8%] text-center">Folga?</th>
-                            <th class="py-4 px-4 w-[8%] text-center">Status</th>
+                        <tr class="border-b border-white/5 text-[10px] font-black uppercase tracking-wider text-slate-400 bg-slate-950/60">
+                            <th class="py-3 px-4 w-[16%]">Dia</th>
+                            <th class="py-3 px-4 w-[24%] text-center">Etapa 1: Teoria (19h-22h)</th>
+                            <th class="py-3 px-4 w-[24%] text-center">Etapa 2: Prática (22h-23h)</th>
+                            <th class="py-3 px-4 w-[20%]">Matéria / Conteúdo</th>
+                            <th class="py-3 px-4 w-[8%] text-center">Folga?</th>
+                            <th class="py-3 px-4 w-[8%] text-center">Status</th>
                         </tr>
                     </thead>
-                    <tbody id="tabela-corpo" class="divide-y divide-app-border text-xs md:text-sm"></tbody>
+                    <tbody id="tabela-corpo" class="divide-y divide-white/5 text-xs"></tbody>
                 `;
                 container.appendChild(table);
                 const tbody = table.querySelector('#tabela-corpo');
@@ -465,40 +426,40 @@
                         if (row.praticaConcluida) totalHorasSemana += 1;
                     }
 
-                    if (row.folga) tr.className = "bg-emerald-950/20 text-emerald-300/80";
-                    else if (row.expirado) tr.className = "bg-rose-950/30 text-rose-200 border-l-4 border-l-rose-500";
-                    else if (eHoje) tr.className = "bg-cyan-950/40 border-l-4 border-l-cyan-400 font-medium";
-                    else tr.className = "hover:bg-slate-800/50 transition";
+                    if (row.folga) tr.className = "bg-emerald-950/10 text-emerald-300/80";
+                    else if (row.expirado) tr.className = "bg-rose-950/20 text-rose-200 border-l-4 border-l-rose-500";
+                    else if (eHoje) tr.className = "bg-indigo-950/30 border-l-4 border-l-cyan-400 font-medium";
+                    else tr.className = "hover:bg-slate-800/40 transition";
 
                     tr.innerHTML = `
-                        <td class="py-3 px-4 font-semibold">
+                        <td class="py-3 px-4 font-bold">
                             <div class="flex items-center gap-1.5">
                                 <span>${row.dia}</span>
-                                ${eHoje ? `<span class="px-1.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-[9px] font-bold border border-cyan-500/40 pulse-badge">HOJE</span>` : ''}
+                                ${eHoje ? `<span class="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-[9px] font-black border border-cyan-500/30 pulse-badge">HOJE</span>` : ''}
                             </div>
                         </td>
-                        <td class="py-2.5 px-3 text-center">
-                            ${row.folga ? '<span class="text-xs text-slate-500">-</span>' : `
-                                <button onclick="alternarEtapa(${index}, 'teoria')" class="w-full py-2 px-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 ${row.teoriaConcluida ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20' : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700'}">
+                        <td class="py-2 px-3 text-center">
+                            ${row.folga ? '<span class="text-xs text-slate-600">-</span>' : `
+                                <button onclick="alternarEtapa(${index}, 'teoria')" class="w-full py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 ${row.teoriaConcluida ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20' : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/5'}">
                                     ${row.teoriaConcluida ? '✓ Teoria | +50XP +50🪙' : '📘 Teoria (19h-22h)'}
                                 </button>
                             `}
                         </td>
-                        <td class="py-2.5 px-3 text-center">
-                            ${row.folga ? '<span class="text-xs text-slate-500">-</span>' : `
-                                <button onclick="alternarEtapa(${index}, 'pratica')" class="w-full py-2 px-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 ${row.praticaConcluida ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20' : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700'}">
+                        <td class="py-2 px-3 text-center">
+                            ${row.folga ? '<span class="text-xs text-slate-600">-</span>' : `
+                                <button onclick="alternarEtapa(${index}, 'pratica')" class="w-full py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 ${row.praticaConcluida ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20' : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/5'}">
                                     ${row.praticaConcluida ? '✓ Prática | +50XP +50🪙' : '✏️ Prática (22h-23h)'}
                                 </button>
                             `}
                         </td>
                         <td class="py-3 px-4">
-                            <input type="text" value="${row.materia}" onchange="atualizarMateria(${index}, this.value)" class="w-full bg-slate-900/90 border border-slate-700/70 rounded-lg px-2 py-1 text-xs text-slate-200 focus:outline-none focus:border-violet-500 transition ${row.folga ? 'opacity-40 cursor-not-allowed' : ''}" ${row.folga ? 'disabled' : ''}>
+                            <input type="text" value="${row.materia}" onchange="atualizarMateria(${index}, this.value)" class="w-full bg-slate-950/80 border border-white/10 rounded-xl px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 transition font-medium ${row.folga ? 'opacity-30 cursor-not-allowed' : ''}" ${row.folga ? 'disabled' : ''}>
                         </td>
                         <td class="py-3 px-4 text-center">
                             <input type="checkbox" ${row.folga ? 'checked' : ''} onchange="alternarFolga(${index})" class="w-4 h-4 rounded border-slate-700 bg-slate-900 text-emerald-500 focus:ring-0 cursor-pointer">
                         </td>
                         <td class="py-3 px-4 text-center">
-                            ${row.folga ? `<span class="px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-bold block">FOLGA</span>` : row.expirado ? `<span class="px-2 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-bold block cursor-pointer hover:bg-rose-500/30 transition shadow-sm" onclick="relevarPenalidade(${index})">Expirado ⚠️</span>` : `<span class="text-xs font-bold ${row.teoriaConcluida && row.praticaConcluida ? 'text-emerald-400' : (row.teoriaConcluida || row.praticaConcluida) ? 'text-amber-400' : 'text-slate-500'}">${row.teoriaConcluida && row.praticaConcluida ? '100%' : (row.teoriaConcluida || row.praticaConcluida) ? '50%' : '0%'}</span>`}
+                            ${row.folga ? `<span class="px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold block">FOLGA</span>` : row.expirado ? `<span class="px-2 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[10px] font-bold block cursor-pointer hover:bg-rose-500/30 transition shadow-sm" onclick="relevarPenalidade(${index})">Expirado ⚠️</span>` : `<span class="text-xs font-bold ${row.teoriaConcluida && row.praticaConcluida ? 'text-emerald-400' : (row.teoriaConcluida || row.praticaConcluida) ? 'text-amber-400' : 'text-slate-500'}">${row.teoriaConcluida && row.praticaConcluida ? '100%' : (row.teoriaConcluida || row.praticaConcluida) ? '50%' : '0%'}</span>`}
                         </td>
                     `;
                     tbody.appendChild(tr);
@@ -506,23 +467,11 @@
             }
 
             document.getElementById('total-horas').innerText = `${totalHorasSemana}h`;
-            document.getElementById('bar-horas').style.width = `${(totalHorasSemana / 24) * 100}%`;
-            document.getElementById('text-dias').innerText = `${totalHorasSemana}h de 24h concluidas`;
-
             document.getElementById('user-xp').innerText = xpAcumuladoTotal;
             document.getElementById('user-gold').innerText = goldAcumuladoTotal;
             
             let level = Math.floor(xpAcumuladoTotal / 300) + 1;
-            let titulo = "Iniciante dos Estudos";
-            if (level >= 5) { titulo = "Mestre Supremo dos Concursos 🏆"; }
-            else if (level >= 3) { titulo = "Lenda do Cursinho 👑"; }
-            else if (level >= 2) { titulo = "Estudante Focado 🔥"; }
-
-            let progressoProximoNivel = (xpAcumuladoTotal % 300) / 300 * 100;
-            document.getElementById('bar-xp').style.width = `${progressoProximoNivel}%`;
             document.getElementById('user-level').innerText = `Lvl ${level}`;
-            document.getElementById('user-title').innerText = titulo;
-
             document.getElementById('badge-penalidades').innerText = penalidades.length;
 
             salvarDados();
@@ -586,7 +535,7 @@
                 localStorage.setItem('estudos_gamificados_gold_total', JSON.stringify(goldAcumuladoTotal));
                 localStorage.setItem('estudos_gamificados_cupons', JSON.stringify(cuponsResgatados));
             } catch (e) {
-                console.warn('Servidor/Navegador bloqueou escrita no LocalStorage:', e);
+                console.warn('LocalStorage indisponível:', e);
             }
         }
 
@@ -651,7 +600,7 @@
 
             cuponsResgatados.forEach(c => {
                 const item = document.createElement('div');
-                item.className = "bg-slate-900 border border-emerald-500/30 p-2.5 rounded-xl flex justify-between items-center text-xs";
+                item.className = "bg-slate-900 border border-emerald-500/20 p-2.5 rounded-xl flex justify-between items-center text-xs";
                 item.innerHTML = `
                     <div>
                         <div class="font-bold text-emerald-400">Vale Presente - R$ ${c.valor},00</div>
@@ -710,30 +659,6 @@
             if (elHoje) {
                 elHoje.innerText = agora.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' });
             }
-
-            function atualizarTimer() {
-                const now = new Date();
-                const sabado = new Date(now);
-                sabado.setDate(now.getDate() + (6 - now.getDay()));
-                sabado.setHours(23, 59, 59, 999);
-
-                const diff = sabado - now;
-                const elTimer = document.getElementById('countdown-timer');
-
-                if (elTimer) {
-                    if (diff > 0) {
-                        const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
-                        const horas = Math.floor((diff / (1000 * 60 * 60)) % 24);
-                        const minutos = Math.floor((diff / 1000 / 60) % 60);
-                        elTimer.innerText = `${dias}d ${horas.toString().padStart(2, '0')}h ${minutos.toString().padStart(2, '0')}m`;
-                    } else {
-                        elTimer.innerText = "Semana Concluída";
-                    }
-                }
-            }
-
-            atualizarTimer();
-            setInterval(atualizarTimer, 60000);
         }
 
         window.addEventListener('resize', renderizarTabela);
